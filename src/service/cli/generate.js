@@ -3,12 +3,13 @@
 const { getRandomInt, shuffle } = require(`../../utils`);
 const fs = require(`fs`).promises;
 const chalk = require("chalk");
+const path = require("path");
 
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
-const FILE_SENTENCES_PATH = `./data/sentences.txt`;
-const FILE_TITLES_PATH = `./data/titles.txt`;
-const FILE_CATEGORIES_PATH = `./data/categories.txt`;
+const FILE_SENTENCES_PATH = path.resolve(`data/sentences.txt`);
+const FILE_TITLES_PATH = path.resolve(`data/titles.txt`);
+const FILE_CATEGORIES_PATH = path.resolve(`data/categories.txt`);
 
 const getDate = () => {
   const threeMonthTimestamp = 7884000000;
@@ -18,8 +19,7 @@ const getDate = () => {
   );
 };
 
-const getCategories = (CATEGORIES, count) => {
-  const categories = CATEGORIES.slice();
+const getCategories = (categories, count) => {
   const result = [];
   for (let i = 0; i < count; i++) {
     const index = getRandomInt(0, categories.length - 1);
@@ -37,7 +37,7 @@ const readFile = async (filePath) => {
     console.error(chalk.red(err));
     return [];
   }
-};  
+};
 
 const generateOffers = (count, sentences, titles, categories) =>
   Array(count)
@@ -65,7 +65,9 @@ module.exports = {
         console.error(chalk.red(`Не больше 1000 публикаций`));
         process.exit(1);
       }
-      const content = JSON.stringify(generateOffers(countOffer, sentences, titles, categories));
+      const content = JSON.stringify(
+        generateOffers(countOffer, sentences, titles, categories)
+      );
       try {
         await fs.writeFile(FILE_NAME, content);
         console.info(chalk.green(`Operation success. File created.`));
@@ -73,10 +75,7 @@ module.exports = {
       } catch {
         return console.error(chalk.red(`Can't write data to file...`));
       }
-
-
-    }
-    catch {
+    } catch {
       console.error(chalk.red(`Can't generate data...`));
       process.exit(1);
     }
