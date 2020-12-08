@@ -7,9 +7,9 @@ const path = require("path");
 
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
-const FILE_SENTENCES_PATH = path.resolve(`data/sentences.txt`);
-const FILE_TITLES_PATH = path.resolve(`data/titles.txt`);
-const FILE_CATEGORIES_PATH = path.resolve(`data/categories.txt`);
+const fileSentencesPath = path.resolve(`data/sentences.txt`);
+const fileTitlesPath = path.resolve(`data/titles.txt`);
+const fileCategoriesPath = path.resolve(`data/categories.txt`);
 
 const getDate = () => {
   const threeMonthTimestamp = 7884000000;
@@ -57,9 +57,9 @@ module.exports = {
   async run(args) {
     try {
       const [count] = args;
-      const sentences = await readFile(FILE_SENTENCES_PATH);
-      const titles = await readFile(FILE_TITLES_PATH);
-      const categories = await readFile(FILE_CATEGORIES_PATH);
+      const sentences = await readFile(fileSentencesPath);
+      const titles = await readFile(fileTitlesPath);
+      const categories = await readFile(fileCategoriesPath);
       const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
       if (countOffer > 1000) {
         console.error(chalk.red(`Не больше 1000 публикаций`));
