@@ -16,7 +16,7 @@ const getDate = () => {
   const currentTimestamp = new Date().getTime();
   return new Date(
     getRandomInt(currentTimestamp - threeMonthTimestamp, currentTimestamp)
-  );
+  ).toLocaleString();
 };
 
 const getCategories = (categories, count) => {
