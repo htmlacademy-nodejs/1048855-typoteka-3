@@ -1,8 +1,8 @@
 "use strict";
 
-const chalk = require(`chalk`);
 const http = require(`http`);
 const { HttpCode } = require("../../constants");
+const logger = require("../../logger");
 const fs = require(`fs`).promises;
 
 const DEFAULT_PORT = 3000;
@@ -23,7 +23,7 @@ const onClientConnect = async (req, res) => {
 
       break;
     case `/hello`:
-      sendResponse(res, HttpCode.OK, 'Привет');
+      sendResponse(res, HttpCode.OK, "Привет");
     default:
       sendResponse(res, HttpCode.NOT_FOUND, notFoundMessageText);
       break;
@@ -58,10 +58,9 @@ module.exports = {
       .listen(port)
       .on(`listening`, (err) => {
         if (err) {
-          return console.error(`Ошибка при создании сервера`, err);
+          return logger.error(`Ошибка при создании сервера`, err);
         }
-
-        return console.info(chalk.green(`Ожидаю соединений на ${port}`));
+        return logger.success(`Ожидаю соединений на ${port}`);
       });
   },
 };

@@ -2,8 +2,8 @@
 
 const { getRandomInt, shuffle } = require(`../../utils`);
 const fs = require(`fs`).promises;
-const chalk = require("chalk");
 const path = require("path");
+const logger = require("../../logger");
 
 const DEFAULT_COUNT = 1;
 const MAX_OFFERS_COUNT = 1000;
@@ -35,7 +35,7 @@ const readFile = async (filePath) => {
     const data = await fs.readFile(filePath, `utf8`);
     return data.split(`\n`);
   } catch (err) {
-    console.error(chalk.red(err));
+    logger.error(err);
     return [];
   }
 };
@@ -63,7 +63,7 @@ module.exports = {
       const categories = await readFile(fileCategoriesPath);
       const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
       if (countOffer > MAX_OFFERS_COUNT) {
-        console.error(chalk.red(`Не больше ${MAX_OFFERS_COUNT} публикаций`));
+        logger.error(`Не больше ${MAX_OFFERS_COUNT} публикаций`);
         process.exit(1);
       }
       const content = JSON.stringify(
@@ -71,13 +71,13 @@ module.exports = {
       );
       try {
         await fs.writeFile(FILE_NAME, content);
-        console.info(chalk.green(`Operation success. File created.`));
+        logger.success(`Operation success. File created.`);
         process.exit(0);
       } catch {
-        return console.error(chalk.red(`Can't write data to file...`));
+        return logger.error(`Can't write data to file...`);
       }
     } catch {
-      console.error(chalk.red(`Can't generate data...`));
+      logger.error(`Can't generate data...`);
       process.exit(1);
     }
   },
