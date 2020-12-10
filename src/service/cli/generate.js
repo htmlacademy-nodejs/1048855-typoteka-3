@@ -2,21 +2,22 @@
 
 const { getRandomInt, shuffle } = require(`../../utils`);
 const fs = require(`fs`).promises;
-const chalk = require("chalk");
 const path = require("path");
+const logger = require("../../logger");
 
 const DEFAULT_COUNT = 1;
+const MAX_OFFERS_COUNT = 1000;
 const FILE_NAME = `mocks.json`;
-const FILE_SENTENCES_PATH = path.resolve(`data/sentences.txt`);
-const FILE_TITLES_PATH = path.resolve(`data/titles.txt`);
-const FILE_CATEGORIES_PATH = path.resolve(`data/categories.txt`);
+const fileSentencesPath = path.resolve(`data/sentences.txt`);
+const fileTitlesPath = path.resolve(`data/titles.txt`);
+const fileCategoriesPath = path.resolve(`data/categories.txt`);
 
 const getDate = () => {
   const threeMonthTimestamp = 7884000000;
   const currentTimestamp = new Date().getTime();
   return new Date(
     getRandomInt(currentTimestamp - threeMonthTimestamp, currentTimestamp)
-  );
+  ).toLocaleString();
 };
 
 const getCategories = (categories, count) => {
@@ -34,7 +35,7 @@ const readFile = async (filePath) => {
     const data = await fs.readFile(filePath, `utf8`);
     return data.split(`\n`);
   } catch (err) {
-    console.error(chalk.red(err));
+    logger.error(err);
     return [];
   }
 };
@@ -57,12 +58,12 @@ module.exports = {
   async run(args) {
     try {
       const [count] = args;
-      const sentences = await readFile(FILE_SENTENCES_PATH);
-      const titles = await readFile(FILE_TITLES_PATH);
-      const categories = await readFile(FILE_CATEGORIES_PATH);
+      const sentences = await readFile(fileSentencesPath);
+      const titles = await readFile(fileTitlesPath);
+      const categories = await readFile(fileCategoriesPath);
       const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
-      if (countOffer > 1000) {
-        console.error(chalk.red(`Не больше 1000 публикаций`));
+      if (countOffer > MAX_OFFERS_COUNT) {
+        logger.error(`Не больше ${MAX_OFFERS_COUNT} публикаций`);
         process.exit(1);
       }
       const content = JSON.stringify(
@@ -70,13 +71,13 @@ module.exports = {
       );
       try {
         await fs.writeFile(FILE_NAME, content);
-        console.info(chalk.green(`Operation success. File created.`));
+        logger.success(`Operation success. File created.`);
         process.exit(0);
       } catch {
-        return console.error(chalk.red(`Can't write data to file...`));
+        return logger.error(`Can't write data to file...`);
       }
     } catch {
-      console.error(chalk.red(`Can't generate data...`));
+      logger.error(`Can't generate data...`);
       process.exit(1);
     }
   },
