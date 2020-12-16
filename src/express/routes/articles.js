@@ -1,13 +1,13 @@
 `use strict`;
 
 const { Router } = require(`express`);
-const offersRouter = new Router();
+const articlesRouter = new Router();
 
-offersRouter.get(`/category/:id`, (req, res) =>
+articlesRouter.get(`/category/:id`, (req, res) =>
   res.send(`/articles/category/:id`)
 );
-offersRouter.get(`/add`, (req, res) => res.send(`/articles/add`));
-offersRouter.get(`/edit/:id`, (req, res) => res.send(`/articles/edit/:id`));
-offersRouter.get(`/:id`, (req, res) => res.send(`/articles/:id`));
+articlesRouter.get(`/add`, (req, res) => res.send(`/articles/add`));
+articlesRouter.get(`/edit/:id`, (req, res) => res.send(`/articles/edit/:id`));
+articlesRouter.get(`/:id`, (req, res) => res.send(`/articles/:id`));
 
-module.exports = offersRouter;
+module.exports = articlesRouter;
